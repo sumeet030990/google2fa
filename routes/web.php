@@ -11,6 +11,20 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/', 'HomeController@index')->name('home');
+
+    /** Google 2Fa */
+    Route::get('/enable2fa', 'GoogleTwoFaController@enableForm');
+    Route::get('/disable2fa', 'GoogleTwoFaController@disableForm');
+    Route::post('/generate2faSecret', 'GoogleTwoFaController@generate2faSecret')->name('generate2faSecret');
+    Route::post('/2fa', 'GoogleTwoFaController@enable2fa')->name('enable2fa');
+    Route::post('/disable2fa', 'GoogleTwoFaController@disable2fa')->name('disable2fa');
+    Route::post('/2faVerify', function () {
+        return redirect(URL()->previous());
+    })->name('2faVerify')->middleware('2fa');
+    /** Google 2Fa End */
 });
