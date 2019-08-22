@@ -5,19 +5,6 @@ namespace App\Repositories\Eloquent;
 abstract class Repository
 {
     /**
-     * @var
-     */
-    protected $model;
-
-    /**
-     * @param $model
-     */
-    public function __construct($model)
-    {
-        $this->model = $model;
-    }
-
-    /**
      * Return all models in a collection
      *
      * @return mixed
@@ -37,6 +24,18 @@ abstract class Repository
     public function store($attributes)
     {
         return $this->model->create($attributes);
+    }
+
+    /**
+     * Create a new record
+     *
+     * @param $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrCreate($attributes)
+    {
+        return $this->model->firstOrCreate($attributes);
     }
 
     /**
