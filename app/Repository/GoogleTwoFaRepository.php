@@ -101,8 +101,7 @@ class GoogleTwoFaRepository extends Repository
             return false;
         }
 
-        $user->google2fa->status = 0;
-        $user->google2fa->save();
+        $user->google2fa->delete();
         return true;
     }
 }

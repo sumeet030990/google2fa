@@ -18,11 +18,11 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <p>Welcome, <b>{{$user->name}}</b></p>
+                    <p>Welcome, <b>{{Auth::user()->name}}</b></p>
                     <p> 
                         Your 2FA status is 
                         <span class="ml-3"> 
-                            @if(is_null($user->google2fa) || !$user->google2fa->status)
+                            @if(is_null(Auth::user()->google2fa) || !Auth::user()->google2fa->status)
                                 <button type="button" class="btn btn-danger" disabled>Disabled</button>
                             @else
                                 <button type="button" class="btn btn-primary" disabled>Enabled</button>
@@ -32,7 +32,7 @@
 
                     <p class="pt-3">
                         <span>
-                            @if(is_null($user->google2fa))
+                            @if(is_null(Auth::user()->google2fa))
                                 <form class="form-horizontal" method="POST" action="{{ route('generate2faSecret') }}">
                                     {{ csrf_field() }}
                                     <div class="form-group">
@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                 </form>
-                            @elseif(!$user->google2fa->status)
+                            @elseif(!Auth::user()->google2fa->status)
                                 <a href="{{url('enable2fa')}}" class="btn btn-primary text-white">Enable Google2Fa</a>
                             @else
                                 <a class="btn btn-warning">Show Recovery code</a>

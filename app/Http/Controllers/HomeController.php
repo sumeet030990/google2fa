@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
@@ -20,12 +19,10 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        return view('home',[
-            'user' => Auth::user()
-        ]);
+        return view('home');
     }
 }
