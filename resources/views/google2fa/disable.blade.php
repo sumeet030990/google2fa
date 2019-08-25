@@ -1,12 +1,13 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading"><strong>Two Factor Authentication</strong></div>
-                <div class="panel-body">
-                    <div class="alert alert-success">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Disable Two Fa Authentication</div>
+                <div class="card-body">
+                   <div class="alert alert-success">
                         2FA is Currently <strong>Enabled</strong> for your account.
                     </div>
                     <p>If you are looking to disable Two Factor Authentication. Please confirm your password and Click

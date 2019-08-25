@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -39,10 +40,22 @@ class User extends Authenticatable
     ];
 
     /**
-     * User hasOne realtion with google2fa 
+     * User hasOne realtion with google2fa
+     * 
+     * @return HasOne
      */
-    public function google2fa()
+    public function google2fa(): HasOne
     {
         return $this->hasOne('App\Models\GoogleTwoFa');
+    }
+
+    /**
+     * Usre HasMany Recovery Code 
+     * 
+     * @return HasMany
+     */
+    public function recoveryCodes(): HasMany
+    {
+        return $this->hasMany('App\Models\RecoveryCode');
     }
 }

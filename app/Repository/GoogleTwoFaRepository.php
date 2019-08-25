@@ -3,7 +3,8 @@
 namespace App\Repository;
 
 use App\Models\GoogleTwoFa;
-use App\Repositories\Eloquent\Repository;
+use App\Models\User;
+use App\Repository\Repository;
 use Auth;
 use Hash;
 
@@ -33,16 +34,21 @@ class GoogleTwoFaRepository extends Repository
     /**
      * Generate & Store 2fa Secret key 
      * 
+     * @param User
      * @return GoogleTwoFa
      */
-    public function generate2faSecret(): GoogleTwoFa
+    public function generate2faSecret(User $user): GoogleTwoFa
     {
         // Add the secret key to the registration data
-        return $this->model->firstOrCreate([
-            'user_id' => Auth::user()->id,
-            'status' => 0,
-            'secret_key' => $this->google2fa->generateSecretKey(),
-        ]);
+        return $this->model->updateOrCreate(
+            [
+                'user_id' => $user->id
+            ],
+            [
+                'status' => 0,
+                'secret_key' => $this->google2fa->generateSecretKey(),
+            ]
+        );
     }
 
     /**
@@ -101,7 +107,9 @@ class GoogleTwoFaRepository extends Repository
             return false;
         }
 
-        $user->google2fa->delete();
+        $user->google2fa->status = 0;
+        $user->google2fa->secret_key = null;
+        $user->google2fa->save();
         return true;
     }
 }

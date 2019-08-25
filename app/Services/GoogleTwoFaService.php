@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\GoogleTwoFa;
+use App\Models\User;
 use App\Repository\GoogleTwoFaRepository;
 
 class GoogleTwoFaService
@@ -28,11 +29,12 @@ class GoogleTwoFaService
     /**
      * Generate & Store 2fa Secret key 
      * 
+     * @param User
      * @return GoogleTwoFa
      */
-    public function generate2faSecret(): GoogleTwoFa
+    public function generate2faSecret(User $user): GoogleTwoFa
     {
-        return $this->googleTwoFaRepository->generate2faSecret();
+        return $this->googleTwoFaRepository->generate2faSecret($user);
     }
      
     /**

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GoogleTwoFormRequest;
 use App\Models\GoogleTwoFa;
 use App\Services\GoogleTwoFaService;
+use App\Services\RecoveryCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Auth;
 
 class GoogleTwoFaController extends Controller
 {
@@ -17,6 +19,13 @@ class GoogleTwoFaController extends Controller
      * @var GoogleTwoFaService
      */
     protected $googleTwoFaService;
+    
+    /**
+     * RecoveryCodeService service object.
+     *
+     * @var RecoveryCodeService
+     */
+    protected $recoveryCodeService;
 
     /**
      * Create a new controller instance.
@@ -24,33 +33,29 @@ class GoogleTwoFaController extends Controller
      * @return void
      */
     public function __construct(
-        GoogleTwoFaService $googleTwoFaService
+        GoogleTwoFaService $googleTwoFaService,
+        RecoveryCodeService $recoveryCodeService
     ){
         $this->googleTwoFaService = $googleTwoFaService;
-    }
-
-    /**
-     * Generate & Store 2fa Secret key 
-     * 
-     * @return RedirectResponse
-     */
-    public function generate2faSecret(): RedirectResponse
-    {
-        if($this->googleTwoFaService->generate2faSecret() instanceof GoogleTwoFa) {
-            return redirect('/enable2fa');
-        }
-
-        return redirect('/')->with('error', "Oops there is some error, please Try again");
+        $this->recoveryCodeService = $recoveryCodeService;
     }
 
     /**
      * GenerateQr code
      * 
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function enableForm(): View
+    public function enableForm()
     {
-        return view('google2fa.enable', $this->googleTwoFaService->generateQrCode());
+        if ($this->googleTwoFaService->generate2faSecret(Auth::user()) instanceof GoogleTwoFa) {
+           $this->recovery = new \PragmaRX\Recovery();
+            $this->recovery->toArray();
+            
+            $this->recoveryCodeService->generateRecoveryCode(Auth::user());
+            return view('google2fa.enable', $this->googleTwoFaService->generateQrCode());
+        } 
+        
+        return redirect('/')->with('error', "Oops Something went wrong, Please try again.");
     }    
 
     /**
